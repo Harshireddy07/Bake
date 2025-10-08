@@ -1,39 +1,658 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Checkout — ClayCraft</title>
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Minimal Store</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --bg-white: #ffffff;
+            --bg-gray: #f9fafb;
+            --border-color: #e5e7eb;
+            --border-radius: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --error-color: #dc2626;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        .main-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .main-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .cart-link {
+            position: relative;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            padding: var(--spacing-lg) 0;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:disabled {
+            background: var(--text-light);
+            border-color: var(--text-light);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl) 0;
+        }
+
+        .empty-state h2 {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            color: var(--text-light);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* Checkout Layout */
+        .checkout-layout {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: var(--spacing-xl);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            background: var(--bg-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .form-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        input.error {
+            border-color: var(--error-color);
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        /* Payment Options */
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-sm);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .payment-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .payment-option input {
+            margin-right: var(--spacing-sm);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: var(--bg-white);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .order-summary h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .checkout-items {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .checkout-item {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .checkout-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-price {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .item-quantity {
+            color: var(--text-light);
+            font-size: 0.875rem;
+        }
+
+        .item-total {
+            font-weight: 600;
+        }
+
+        .order-totals {
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--spacing-md);
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .total-row.total {
+            font-weight: 700;
+            font-size: 1.125rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: var(--spacing-sm);
+            margin-top: var(--spacing-sm);
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--bg-gray);
+            padding: var(--spacing-lg) 0;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: var(--spacing-xl);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .order-summary {
+                position: static;
+                order: -1;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="logo">ClayCraft 🏺</div>
-    <nav>
-      <a href="index.html">Home</a>
-    </nav>
-  </header>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">MinimalStore</a>
+                <nav class="main-nav">
+                    <a href="index.html">Home</a>
+                    <a href="checkout.html">Checkout</a>
+                </nav>
+                <div class="header-actions">
+                    <a href="checkout.html" class="cart-link">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.4 5.2 16.4H17M17 13V16.4M9 19C9 19.6 8.6 20 8 20C7.4 20 7 19.6 7 19C7 18.4 7.4 18 8 18C8.6 18 9 18.4 9 19ZM17 19C17 19.6 16.6 20 16 20C15.4 20 15 19.6 15 19C15 18.4 15.4 18 16 18C16.6 18 17 18.4 17 19Z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h1>Checkout</h1>
+            </div>
+            
+            <div id="empty-cart-message" class="empty-state" style="display: none;">
+                <h2>Your cart is empty</h2>
+                <p>Add some items from the home page to continue.</p>
+                <a href="index.html" class="btn btn-primary">Return to Home</a>
+            </div>
+            
+            <div class="checkout-layout" id="checkout-content" style="display: none;">
+                <div class="checkout-form">
+                    <form id="checkout-form">
+                        <section class="form-section">
+                            <h2>Contact Information</h2>
+                            <div class="form-group">
+                                <label for="fullName">Full Name *</label>
+                                <input type="text" id="fullName" name="fullName" required>
+                                <span class="error-message" id="fullName-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address *</label>
+                                <input type="email" id="email" name="email" required>
+                                <span class="error-message" id="email-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                        </section>
 
-  <section class="checkout">
-    <h1>Your Cart</h1>
-    <div id="cart-items"></div>
+                        <section class="form-section">
+                            <h2>Shipping Address</h2>
+                            <div class="form-group">
+                                <label for="address1">Address Line 1 *</label>
+                                <input type="text" id="address1" name="address1" required>
+                                <span class="error-message" id="address1-error"></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="address2">Address Line 2</label>
+                                <input type="text" id="address2" name="address2">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">City *</label>
+                                    <input type="text" id="city" name="city" required>
+                                    <span class="error-message" id="city-error"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="state">State/Province *</label>
+                                    <input type="text" id="state" name="state" required>
+                                    <span class="error-message" id="state-error"></span>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="postalCode">Postal Code *</label>
+                                    <input type="text" id="postalCode" name="postalCode" required>
+                                    <span class="error-message" id="postalCode-error"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="country">Country *</label>
+                                    <input type="text" id="country" name="country" required>
+                                    <span class="error-message" id="country-error"></span>
+                                </div>
+                            </div>
+                        </section>
 
-    <div class="checkout-form">
-      <h2>Shipping Information</h2>
-      <form onsubmit="return completePurchase(event)">
-        <input type="text" placeholder="Full Name" required>
-        <input type="text" placeholder="Address" required>
-        <input type="text" placeholder="City" required>
-        <input type="text" placeholder="Postal Code" required>
-        <input type="email" placeholder="Email" required>
-        <button type="submit" class="primary-btn">Complete Purchase</button>
-      </form>
-    </div>
-  </section>
+                        <section class="form-section">
+                            <h2>Payment Method</h2>
+                            <div class="payment-options">
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="card" checked>
+                                    <span>Credit/Debit Card</span>
+                                </label>
+                                <label class="payment-option">
+                                    <input type="radio" name="payment" value="paypal">
+                                    <span>PayPal</span>
+                                </label>
+                            </div>
+                        </section>
 
-  <footer>
-    <p>© 2025 ClayCraft. All rights reserved.</p>
-  </footer>
+                        <button type="submit" class="btn btn-primary btn-full">Place Order</button>
+                    </form>
+                </div>
+
+                <div class="order-summary">
+                    <h2>Order Summary</h2>
+                    <div id="checkout-items" class="checkout-items">
+                        <!-- Order items will be injected here -->
+                    </div>
+                    <div class="order-totals">
+                        <div class="total-row">
+                            <span>Subtotal</span>
+                            <span id="subtotal">$0.00</span>
+                        </div>
+                        <div class="total-row">
+                            <span>Tax (8%)</span>
+                            <span id="tax">$0.00</span>
+                        </div>
+                        <div class="total-row total">
+                            <span>Total</span>
+                            <span id="total">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 MinimalStore. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const CART_KEY = 'minimalStoreCart';
+        const TAX_RATE = 0.08;
+
+        function getCart() {
+            const cart = localStorage.getItem(CART_KEY);
+            return cart ? JSON.parse(cart) : {};
+        }
+
+        function updateCartCount() {
+            const cart = getCart();
+            const count = Object.values(cart).reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = count;
+            return count;
+        }
+
+        function clearCart() {
+            localStorage.removeItem(CART_KEY);
+            updateCartCount();
+        }
+
+        function calculateTotals() {
+            const cart = getCart();
+            const subtotal = Object.values(cart).reduce((total, item) => total + (item.price * item.quantity), 0);
+            const tax = subtotal * TAX_RATE;
+            const total = subtotal + tax;
+            
+            return { subtotal, tax, total };
+        }
+
+        function renderOrderSummary() {
+            const cart = getCart();
+            const itemsContainer = document.getElementById('checkout-items');
+            const { subtotal, tax, total } = calculateTotals();
+            
+            itemsContainer.innerHTML = Object.values(cart).map(item => `
+                <div class="checkout-item">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">$${item.price} × ${item.quantity}</div>
+                    </div>
+                    <div class="item-total">$${(item.price * item.quantity).toFixed(2)}</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${total.toFixed(2)}`;
+        }
+
+        function validateForm() {
+            let isValid = true;
+            const form = document.getElementById('checkout-form');
+            const inputs = form.querySelectorAll('input[required]');
+            
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+            document.querySelectorAll('input').forEach(el => el.classList.remove('error'));
+            
+            // Validate required fields
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    isValid = false;
+                    input.classList.add('error');
+                    const errorEl = document.getElementById(`${input.id}-error`);
+                    if (errorEl) {
+                        errorEl.textContent = 'This field is required';
+                    }
+                }
+            });
+            
+            // Validate email format
+            const email = document.getElementById('email');
+            if (email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                isValid = false;
+                email.classList.add('error');
+                document.getElementById('email-error').textContent = 'Please enter a valid email address';
+            }
+            
+            return isValid;
+        }
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            if (validateForm()) {
+                // Simulate form submission
+                const submitBtn = event.target.querySelector('button[type="submit"]');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Processing...';
+                
+                setTimeout(() => {
+                    clearCart();
+                    window.location.href = 'success.html';
+                }, 2000);
+            }
+        }
+
+        // Initialize checkout page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartCount();
+            
+            const cart = getCart();
+            const cartCount = Object.keys(cart).length;
+            const emptyMessage = document.getElementById('empty-cart-message');
+            const checkoutContent = document.getElementById('checkout-content');
+            
+            if (cartCount === 0) {
+                emptyMessage.style.display = 'block';
+                checkoutContent.style.display = 'none';
+            } else {
+                emptyMessage.style.display = 'none';
+                checkoutContent.style.display = 'grid';
+                renderOrderSummary();
+                
+                // Add form submission handler
+                document.getElementById('checkout-form').addEventListener('submit', handleFormSubmit);
+                
+                // Add real-time validation
+                document.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('blur', validateForm);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
