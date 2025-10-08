@@ -1,91 +1,453 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ClayCraft — Handcrafted Pottery</title>
-  <link rel="stylesheet" href="styles.css">
-  <script defer src="script.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimal Store - Home</title>
+    <style>
+        /* CSS Variables */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-light: #9ca3af;
+            --bg-white: #ffffff;
+            --bg-gray: #f9fafb;
+            --border-color: #e5e7eb;
+            --border-radius: 8px;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+        }
+
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-white);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-sm);
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: var(--spacing-lg);
+        }
+
+        .main-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .main-nav a:hover {
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .cart-link {
+            position: relative;
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-xl) 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: var(--spacing-lg);
+            opacity: 0.9;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Featured Products */
+        .featured-products {
+            padding: var(--spacing-xl) 0;
+            background: var(--bg-gray);
+        }
+
+        .featured-products h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-lg);
+            font-weight: 700;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+            margin-top: var(--spacing-lg);
+        }
+
+        .product-card {
+            background: var(--bg-white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .product-content {
+            padding: var(--spacing-md);
+        }
+
+        .product-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        .main-footer {
+            background: var(--bg-gray);
+            padding: var(--spacing-lg) 0;
+            text-align: center;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .featured-products h2 {
+                font-size: 2rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+            
+            .main-nav {
+                gap: var(--spacing-md);
+            }
+        }
+    </style>
 </head>
 <body>
-  <!-- HEADER -->
-  <header>
-    <div class="logo">ClayCraft 🏺</div>
-    <nav>
-      <a href="#home">Home</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#about">About</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <button class="cart-btn" onclick="goToCheckout()">🛒 Checkout</button>
-  </header>
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">MinimalStore</a>
+                <nav class="main-nav">
+                    <a href="index.html">Home</a>
+                    <a href="checkout.html">Checkout</a>
+                </nav>
+                <div class="header-actions">
+                    <a href="checkout.html" class="cart-link">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.4 5.2 16.4H17M17 13V16.4M9 19C9 19.6 8.6 20 8 20C7.4 20 7 19.6 7 19C7 18.4 7.4 18 8 18C8.6 18 9 18.4 9 19ZM17 19C17 19.6 16.6 20 16 20C15.4 20 15 19.6 15 19C15 18.4 15.4 18 16 18C16.6 18 17 18.4 17 19Z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Minimal Design, Maximum Quality</h1>
+                <p>Discover our curated collection of essential products designed for modern living.</p>
+                <button class="btn btn-primary" onclick="addSampleItems()">Add Sample Items & Checkout</button>
+            </div>
+        </section>
 
-  <!-- HERO SECTION -->
-  <section id="home" class="hero">
-    <div class="hero-content">
-      <h1>Handcrafted Pottery for Your Home</h1>
-      <p>Discover unique, earthy, and timeless pottery pieces made with love and tradition.</p>
-      <div class="hero-buttons">
-        <button class="primary-btn" onclick="goToCheckout()">Buy Now</button>
-        <button class="secondary-btn" onclick="scrollToSection('about')">Learn More</button>
-      </div>
-    </div>
-  </section>
+        <section class="featured-products">
+            <div class="container">
+                <h2>Featured Products</h2>
+                <div id="featured-products-grid" class="products-grid">
+                    <!-- Products will be injected here -->
+                </div>
+            </div>
+        </section>
+    </main>
 
-  <!-- GALLERY SECTION -->
-  <section id="gallery" class="gallery">
-    <h2>Our Collection</h2>
-    <div class="gallery-grid">
-      <div class="item">
-        <img src="https://images.unsplash.com/photo-1560785496-3c9aa2d31f6d" alt="Pot 1">
-        <h3>Rustic Vase</h3>
-        <p>$45</p>
-        <button onclick="addToCart('Rustic Vase', 45)">Add to Cart</button>
-      </div>
-      <div class="item">
-        <img src="https://images.unsplash.com/photo-1587502536263-1ec86f2baf65" alt="Pot 2">
-        <h3>Clay Mug Set</h3>
-        <p>$35</p>
-        <button onclick="addToCart('Clay Mug Set', 35)">Add to Cart</button>
-      </div>
-      <div class="item">
-        <img src="https://images.unsplash.com/photo-1606813902917-7b8c8d10d45c" alt="Pot 3">
-        <h3>Terracotta Bowl</h3>
-        <p>$25</p>
-        <button onclick="addToCart('Terracotta Bowl', 25)">Add to Cart</button>
-      </div>
-      <div class="item">
-        <img src="https://images.unsplash.com/photo-1587574293340-3eaf69dd1b08" alt="Pot 4">
-        <h3>Decorative Pitcher</h3>
-        <p>$60</p>
-        <button onclick="addToCart('Decorative Pitcher', 60)">Add to Cart</button>
-      </div>
-    </div>
-  </section>
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2024 MinimalStore. All rights reserved.</p>
+        </div>
+    </footer>
 
-  <!-- ABOUT SECTION -->
-  <section id="about" class="about">
-    <div class="about-text">
-      <h2>About ClayCraft</h2>
-      <p>At ClayCraft, we believe in preserving ancient craftsmanship while embracing modern design. Our artisans handcraft each piece using sustainable materials and traditional techniques passed down through generations.</p>
-      <p>Our pottery isn't just decor — it's a story molded in clay.</p>
-    </div>
-  </section>
+    <div id="toast" class="toast"></div>
 
-  <!-- CONTACT SECTION -->
-  <section id="contact" class="contact">
-    <h2>Get in Touch</h2>
-    <form onsubmit="return handleContact(event)">
-      <input type="text" placeholder="Your Name" required>
-      <input type="email" placeholder="Email Address" required>
-      <textarea placeholder="Message" required></textarea>
-      <button type="submit" class="primary-btn">Send Message</button>
-    </form>
-  </section>
+    <script>
+        // Product Data
+        const products = [
+            {
+                id: 1,
+                name: "Minimal Desk Lamp",
+                price: 89.99,
+                description: "Sleek LED desk lamp with adjustable brightness",
+                imageColor: "#4f46e5"
+            },
+            {
+                id: 2,
+                name: "Organic Cotton T-Shirt",
+                price: 29.99,
+                description: "Soft, sustainable cotton in essential colors",
+                imageColor: "#059669"
+            },
+            {
+                id: 3,
+                name: "Ceramic Coffee Mug",
+                price: 24.99,
+                description: "Handcrafted ceramic mug with modern design",
+                imageColor: "#dc2626"
+            },
+            {
+                id: 4,
+                name: "Wooden Watch",
+                price: 149.99,
+                description: "Eco-friendly wooden timepiece",
+                imageColor: "#92400e"
+            }
+        ];
 
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2025 ClayCraft. All rights reserved.</p>
-  </footer>
+        // Cart Management
+        const CART_KEY = 'minimalStoreCart';
+
+        function getCart() {
+            const cart = localStorage.getItem(CART_KEY);
+            return cart ? JSON.parse(cart) : {};
+        }
+
+        function saveCart(cart) {
+            localStorage.setItem(CART_KEY, JSON.stringify(cart));
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const cart = getCart();
+            const count = Object.values(cart).reduce((total, item) => total + item.quantity, 0);
+            document.querySelector('.cart-count').textContent = count;
+        }
+
+        function addToCart(productId) {
+            const cart = getCart();
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                if (cart[productId]) {
+                    cart[productId].quantity += 1;
+                } else {
+                    cart[productId] = {
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        quantity: 1
+                    };
+                }
+                saveCart(cart);
+                showToast(`${product.name} added to cart`);
+            }
+        }
+
+        function addSampleItems() {
+            // Add first two products to cart
+            addToCart(1);
+            addToCart(2);
+            showToast('Sample items added! Redirecting to checkout...');
+            setTimeout(() => {
+                window.location.href = 'checkout.html';
+            }, 1500);
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Render Featured Products
+        function renderFeaturedProducts() {
+            const grid = document.getElementById('featured-products-grid');
+            grid.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image" style="background-color: ${product.imageColor}; color: white;">
+                        ${product.name}
+                    </div>
+                    <div class="product-content">
+                        <h3 class="product-title">${product.name}</h3>
+                        <p class="product-description">${product.description}</p>
+                        <div class="product-price">$${product.price}</div>
+                        <button class="btn btn-primary" onclick="addToCart(${product.id})" style="margin-top: 1rem;">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            renderFeaturedProducts();
+            updateCartCount();
+        });
+    </script>
 </body>
 </html>
