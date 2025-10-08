@@ -3,44 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout - Aura</title>
+  <title>Landing Page - Aura Product</title>
   <style>
-    body{font-family:Poppins,sans-serif;margin:0;background:#fdfdfd;color:#333;}
-    .hero{background:linear-gradient(to right,#ff4da6,#ff8095);color:white;text-align:center;padding:60px 20px;}
-    .hero h1{font-size:2.2rem;}
-    .contact{padding:50px 20px;text-align:center;}
-    .contact form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:auto;}
-    .contact input{padding:10px;border:1px solid #ccc;border-radius:8px;}
-    .btn{padding:12px;background:#ff4da6;color:white;border:none;border-radius:25px;cursor:pointer;}
+    /* General */
+    body {font-family:Poppins, sans-serif;margin:0;padding:0;background:#fdfdfd;color:#333;line-height:1.6;}
+    h1,h2{text-align:center;margin-bottom:10px;}
+    p{text-align:center;max-width:700px;margin:auto;}
+    a{text-decoration:none;}
+    .btn{display:inline-block;padding:12px 25px;background:#ff4da6;color:white;border-radius:25px;margin-top:15px;transition:0.3s;}
     .btn:hover{background:#e60073;}
+
+    /* Hero */
+    .hero{background:linear-gradient(to right,#ff4da6,#ff8095);color:white;text-align:center;padding:80px 20px;}
+    .hero h1{font-size:2.8rem;}
+    .hero p{font-size:1.2rem;}
+
+    /* Description */
+    .description{padding:40px 20px;}
+
+    /* Features */
+    .features{padding:50px 20px;background:#f9f9f9;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:20px;}
+    .card{background:white;padding:20px;border-radius:12px;text-align:center;box-shadow:0 3px 6px rgba(0,0,0,0.1);}
+
+    /* Pricing */
+    .pricing{padding:50px 20px;background:#fff0f6;text-align:center;}
+    .pricing strong{font-size:1.5rem;}
+
+    /* Contact */
+    .contact{padding:50px 20px;background:#111;color:white;text-align:center;}
+    .contact form{display:flex;flex-direction:column;gap:12px;max-width:400px;margin:auto;}
+    .contact input,.contact textarea{padding:10px;border:none;border-radius:8px;}
+    .contact button{border:none;cursor:pointer;}
   </style>
 </head>
 <body>
+  <!-- Hero Section -->
   <header class="hero">
-    <h1>Checkout</h1>
-    <p>Fill in your details to complete the purchase.</p>
+    <h1>Aura Smart Gadget</h1>
+    <p>The ultimate gadget to make your life smarter & simpler.</p>
+    <a href="checkout.html" class="btn">Buy Now</a>
   </header>
 
-  <section class="contact">
-    <form onsubmit="return validateCheckout()" action="thankyou.html" method="get">
-      <input type="text" id="name" placeholder="Full Name" required>
-      <input type="email" id="email" placeholder="Email Address" required>
-      <input type="text" id="address" placeholder="Shipping Address" required>
-      <input type="number" id="card" placeholder="Card Number" required>
-      <button type="submit" class="btn">Complete Purchase</button>
-    </form>
+  <!-- Product Description -->
+  <section class="description">
+    <h2>About the Product</h2>
+    <p>Aura is a sleek, lightweight smart gadget designed for productivity and fun. Stay connected, stay smart, and experience innovation at your fingertips.</p>
   </section>
 
+  <!-- Features Grid -->
+  <section class="features">
+    <h2>Key Features</h2>
+    <div class="grid">
+      <div class="card">⚡ Super Fast Performance</div>
+      <div class="card">🔋 Long-lasting Battery</div>
+      <div class="card">📱 Sleek & Modern Design</div>
+      <div class="card">☁️ Cloud Sync Support</div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="pricing">
+    <h2>Special Offer</h2>
+    <p>Get Aura Smart Gadget now at just <strong>$199</strong> (Limited Time Offer!)</p>
+    <a href="checkout.html" class="btn">Order Now</a>
+  </section>
+
+  <!-- Contact Form -->
+  <footer class="contact">
+    <h2>Contact Us</h2>
+    <form onsubmit="return validateContact()">
+      <input type="text" id="cname" placeholder="Your Name" required>
+      <input type="email" id="cemail" placeholder="Your Email" required>
+      <textarea id="cmsg" placeholder="Your Message" required></textarea>
+      <button type="submit" class="btn">Send Message</button>
+    </form>
+    <p>Email: support@aura.com | Phone: +91 9876543210</p>
+  </footer>
+
   <script>
-    function validateCheckout(){
-      let name=document.getElementById("name").value.trim();
-      let email=document.getElementById("email").value.trim();
-      let address=document.getElementById("address").value.trim();
-      let card=document.getElementById("card").value.trim();
-      if(name===""||email===""||address===""||card===""){
-        alert("All fields are required!"); return false;
-      }
-      if(card.length<8){alert("Enter a valid card number!");return false;}
+    function validateContact(){
+      let name=document.getElementById("cname").value.trim();
+      let email=document.getElementById("cemail").value.trim();
+      let msg=document.getElementById("cmsg").value.trim();
+      if(name===""||email===""||msg===""){alert("Please fill all fields");return false;}
+      alert("Message sent successfully!");
       return true;
     }
   </script>
